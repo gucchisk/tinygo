@@ -115,8 +115,10 @@ func (c *Compiler) emitNilCheck(frame *Frame, ptr llvm.Value, blockPrefix string
 	frame.blockExits[frame.currentBlock] = nextBlock // adjust outgoing block for phi nodes
 
 	// Compare against nil.
-	nilptr := llvm.ConstPointerNull(ptr.Type())
-	isnil := c.builder.CreateICmp(llvm.IntEQ, ptr, nilptr, "")
+	ptr = c.builder.CreateBitCast(ptr, c.i8ptrType, "")
+	isnil := c.createRuntimeCall("isnil", []llvm.Value{ptr}, "")
+	//nilptr := llvm.ConstPointerNull(ptr.Type())
+	//isnil := c.builder.CreateICmp(llvm.IntEQ, ptr, nilptr, "")
 	c.builder.CreateCondBr(isnil, faultBlock, nextBlock)
 
 	// Fail: this is a nil pointer, exit with a panic.

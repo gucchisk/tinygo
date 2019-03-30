@@ -379,6 +379,10 @@ func (c *Compiler) Compile(mainPath string) error {
 		c.mod.NamedFunction("runtime.alloc").AddAttributeAtIndex(0, attr)
 	}
 
+	attrKind := llvm.AttributeKindID("nocapture")
+	attr := c.ctx.CreateEnumAttribute(attrKind, 0)
+	c.mod.NamedFunction("runtime.isnil").AddAttributeAtIndex(1, attr)
+
 	// see: https://reviews.llvm.org/D18355
 	if c.Debug {
 		c.mod.AddNamedMetadataOperand("llvm.module.flags",

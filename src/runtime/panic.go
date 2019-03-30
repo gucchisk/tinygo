@@ -27,6 +27,10 @@ func _recover() interface{} {
 	return nil
 }
 
+func isnil(ptr *uint8) bool {
+	return ptr == nil
+}
+
 // Panic when trying to dereference a nil pointer.
 func nilpanic() {
 	runtimePanic("nil pointer dereference")
